@@ -3,4 +3,5 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
+  base: process.env.GITHUB_PAGES ? '/agenda-de-estudos-vue-2ads/' : '/',
 })

@@ -26,6 +26,12 @@ npm run build
 npm run preview
 ```
 
+## Acesso público
+
+- [Aplicação publicada](https://luccalck.github.io/agenda-de-estudos-vue-2ads/)
+- [Projeto no GitHub](https://github.com/luccalck/agenda-de-estudos-vue-2ads)
+- [Abrir em sandbox online](https://stackblitz.com/github/luccalck/agenda-de-estudos-vue-2ads)
+
 ## Arquivos principais
 
 - `src/router/index.js`: define as rotas `/` e `/tarefas`.
