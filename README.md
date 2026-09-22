@@ -19,10 +19,10 @@ Abra a pasta do projeto no VS Code e escolha **Terminal → Novo Terminal**. No 
 
 ```bash
 npm ci
-npm run dev -- --port 5188
+npm run dev
 ```
 
-Abra `http://localhost:5188/` no navegador. Para conferir a versão de produção:
+Abra `http://127.0.0.1:5188/` no navegador. O servidor mostra apenas esse endereço local e não muda de porta automaticamente. Para conferir a versão de produção:
 
 ```bash
 npm run build
