@@ -1,9 +1,32 @@
 <script setup>
 import { ref } from 'vue'
 
+const chaveArmazenamento = 'agenda-de-estudos-tarefas-v1'
+let falhaAoLer = false
+
+function carregarTarefas() {
+  try {
+    const dados = JSON.parse(window.localStorage.getItem(chaveArmazenamento) || '[]')
+    if (!Array.isArray(dados)) return []
+
+    const ids = new Set()
+    return dados.filter((tarefa) => {
+      if (!tarefa || !Number.isSafeInteger(tarefa.id) || tarefa.id < 1 ||
+          typeof tarefa.titulo !== 'string' || !tarefa.titulo.trim() ||
+          tarefa.titulo.length > 120 || ids.has(tarefa.id)) return false
+      ids.add(tarefa.id)
+      return true
+    })
+  } catch {
+    falhaAoLer = true
+    return []
+  }
+}
+
 const novaTarefa = ref('')
-const tarefas = ref([])
-let proximoId = 1
+const tarefas = ref(carregarTarefas())
+const avisoArmazenamento = ref(falhaAoLer ? 'Não foi possível ler as tarefas salvas neste navegador.' : '')
+let proximoId = Math.max(0, ...tarefas.value.map((tarefa) => tarefa.id)) + 1
 
 function adicionar() {
   const titulo = novaTarefa.value.trim()
@@ -11,6 +34,12 @@ function adicionar() {
 
   tarefas.value.push({ id: proximoId++, titulo })
   novaTarefa.value = ''
+  try {
+    window.localStorage.setItem(chaveArmazenamento, JSON.stringify(tarefas.value))
+    avisoArmazenamento.value = ''
+  } catch {
+    avisoArmazenamento.value = 'A tarefa foi adicionada, mas não pôde ser salva neste navegador.'
+  }
 }
 </script>
 
@@ -42,6 +71,8 @@ function adicionar() {
         <h2>Tarefas cadastradas</h2>
         <span>{{ tarefas.length }} {{ tarefas.length === 1 ? 'tarefa' : 'tarefas' }}</span>
       </div>
+
+      <p v-if="avisoArmazenamento" role="status" class="storage-warning">{{ avisoArmazenamento }}</p>
 
       <p v-if="tarefas.length === 0" class="empty-state">Nenhuma tarefa cadastrada. Comece adicionando a primeira.</p>
       <ul v-else class="task-list">
